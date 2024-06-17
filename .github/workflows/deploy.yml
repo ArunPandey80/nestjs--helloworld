@@ -1,0 +1,46 @@
+name: Pipeline to deploy the code
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout main branch code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js application
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies in the application
+      run: npm install
+
+    - name: Run tests of the application
+      run: npm test
+
+    - name: Build the project
+      run: npm run build
+
+    - name: Re-Deploy to EC2
+      env:
+        EC2_HOST: ${{ secrets.EC2_HOST }}
+        EC2_USER: ${{ secrets.EC2_USER }}
+        EC2_KEY: ${{ secrets.EC2_KEY }}
+        EC2_PATH: ${{ secrets.EC2_PATH }}
+      run: |
+        echo "$EC2_KEY" > key.pem
+        chmod 600 key.pem
+        scp -o StrictHostKeyChecking=no -i key.pem -r dist/* $EC2_USER@$EC2_HOST:$EC2_PATH
+        ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST << 'EOF'
+          pm2 restart hello-world || pm2 start dist/main.js --name hello-world
+EOF
+      shell: bash
