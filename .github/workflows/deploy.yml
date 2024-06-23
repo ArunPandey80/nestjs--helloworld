@@ -21,7 +21,7 @@ jobs:
       with:
         node-version: '16'
 
-    - name: Install dependencies in the application
+    - name: Install dependencies in the application 
       run: npm install
 
     - name: Run tests of the application
