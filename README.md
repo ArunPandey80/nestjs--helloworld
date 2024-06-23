@@ -1,4 +1,4 @@
---------------------------------------DOCUMENTATION------------------------------------------------
+
 
 1. Set Up Your EC2 Instance
    Launch EC2 Instance:
@@ -31,7 +31,7 @@
    Install Node.js and npm:
     sudo yum update -y
 
-  Install Git:
+   Install Git:
     sudo yum install git -y
      
 3. Deploy Your NestJS Application
