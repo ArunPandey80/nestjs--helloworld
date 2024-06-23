@@ -28,7 +28,7 @@
    Update Packages:
     sudo yum install git -y2. Set Up the Environment
 
-  Install Node.js and npm:
+   Install Node.js and npm:
     sudo yum update -y
 
   Install Git:
