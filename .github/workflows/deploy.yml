@@ -30,9 +30,11 @@ jobs:
         EC2_HOST: ${{ secrets.EC2_HOST }}
         KEY_PATH: ${{ secrets.KEY_PATH }}
       run: |
-        ssh -i $KEY_PATH -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "mkdir -p ~/hello-world-nestjs"
-        sudo scp -i $KEY_PATH -o StrictHostKeyChecking=no -r ./* $EC2_USER@$EC2_HOST:~/hello-world-nestjs/
-        ssh -i $KEY_PATH -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+        echo "${{ secrets.KEY_PATH }}" > key.pem
+        chmod 600 key.pem
+        ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "mkdir -p ~/hello-world-nestjs"
+        scp -i key.pem -o StrictHostKeyChecking=no -r ./* $EC2_USER@$EC2_HOST:~/hello-world-nestjs/
+        ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
         cd ~/hello-world-nestjs
         npm install --legacy-peer-deps
         npm run build
