@@ -60,3 +60,4 @@
    
    Check Application Logs:
       pm2 logs
+Trigger GitHub Actions
